@@ -1,0 +1,15 @@
+; Based on https://github.com/uiriansan/SilentSDDM
+
+[SddmGreeterTheme]
+Name=Chima
+Type=sddm-theme
+Description=Chima SDDM Theme.
+License=GPL-3.0-or-later
+Version=1.0.0
+Theme-Id=chima
+Theme-API=2.0
+MainScript=Main.qml
+TranslationsDirectory=translations
+QtVersion=6
+
+ConfigFile=configs/default.conf
