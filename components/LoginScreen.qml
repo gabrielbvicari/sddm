@@ -51,7 +51,7 @@ Item {
         }
         function onLoginFailed() {
             safeStateChange("normal");
-            loginMessage.warn(textConstants.loginFailed || "Login failed", "error");
+            loginMessage.warn("Incorrect Password", "error");
             password.text = "";
         }
         function onInformationMessage(message) {
