@@ -18,9 +18,10 @@ Based on [SilentSDDM](https://github.com/uiriansan/SilentSDDM) by uiriansan, thi
 - Clock with seconds, non-bold weight;
 - No "Press any key" message on the lock screen;
 - No caps lock warning;
-- Password input and login button sized to match Quickshell lock screen (160x35);
-- Session selector top-left, power menu top-right;
+- Resized password input and login button;
+- Session selector top-left, layout and power menus top-right;
 - Avatar placeholder icon when no user image is set;
+- Virtual keyboard removed;
 - Unused presets, backgrounds, docs, and assets removed.
 
 ## Requirements
@@ -28,7 +29,6 @@ Based on [SilentSDDM](https://github.com/uiriansan/SilentSDDM) by uiriansan, thi
 - **SDDM >= 0.21.0**
 - **Qt >= 6.5**
 - `qt6-svg`
-- `qt6-virtualkeyboard`
 
 ## Installation
 
@@ -44,24 +44,17 @@ sudo cp ~/Projects/sddm/configs/sddm.conf /etc/sddm.conf
 
 # Or just clone directly in the configuration folder and copy the configuration file:
 git clone https://github.com/gabrielbvicari/sddm.git /usr/share/sddm/themes/chima
-sudo cp ~//usr/share/sddm/themes/chima/configs/sddm.conf /etc/sddm.conf
+sudo cp /usr/share/sddm/themes/chima/configs/sddm.conf /etc/sddm.conf
 ```
 
 ## Testing
 
-You can preview the theme without logging out:
+It's possible to preview the theme without logging out by running the test script:
 
 ```bash
 ./test.sh
 ```
 
-Use `./test.sh --debug` for verbose output.
-
-## Customization
-
-All visual properties are configured in [`configs/default.conf`](configs/default.conf). See the [SilentSDDM wiki](https://github.com/uiriansan/SilentSDDM/wiki/Customizing) for a full list of available options.
-
 ## Acknowledgements
 
 - [SilentSDDM](https://github.com/uiriansan/SilentSDDM) by uiriansan
-- [Qt Virtual Keyboard](https://github.com/qt/qtvirtualkeyboard) style adapted from Qt Company (GPL-3.0)

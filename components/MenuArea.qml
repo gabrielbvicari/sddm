@@ -193,7 +193,6 @@ Item {
                     focus: popup.focus
                     onLayoutChanged: function (index) {
                         layoutButton.label = showLabel ? (keyboard && keyboard.layouts && keyboard.currentLayout >= 0 && keyboard.currentLayout < keyboard.layouts.length ? keyboard.layouts[keyboard.currentLayout].shortName.toUpperCase() : "") : "";
-                        VirtualKeyboardSettings.locale = Languages.getKBCodeFor(keyboard && keyboard.layouts && keyboard.currentLayout >= 0 && keyboard.currentLayout < keyboard.layouts.length ? keyboard.layouts[keyboard.currentLayout].shortName : "");
                     }
                     onClose: {
                         popup.close();
@@ -204,36 +203,6 @@ Item {
                     [x, y] = menuArea.calculatePopupPos(Config.layoutPopupDirection, Config.layoutPopupAlign, popup, layoutButton);
                 }
             }
-        }
-    }
-
-    Component {
-        id: keyboardMenuComponent
-
-        IconButton {
-            id: keyboardButton
-
-            height: Config.menuAreaButtonsSize * Config.generalScale
-            width: Config.menuAreaButtonsSize * Config.generalScale
-            icon: Config.getIcon(Config.keyboardIcon)
-            iconSize: Config.keyboardIconSize
-            backgroundColor: Config.keyboardBackgroundColor
-            backgroundOpacity: Config.keyboardBackgroundOpacity
-            activeBackgroundColor: Config.keyboardBackgroundColor
-            activeBackgroundOpacity: Config.keyboardActiveBackgroundOpacity
-            contentColor: Config.keyboardContentColor
-            activeContentColor: Config.keyboardActiveContentColor
-            active: showKeyboard
-            fontFamily: Config.menuAreaButtonsFontFamily
-            borderRadius: Config.menuAreaButtonsBorderRadius
-            borderSize: Config.keyboardBorderSize
-            enabled: loginScreen.showKeyboard || loginScreen.state === "normal"
-            activeFocusOnTab: true
-            focus: false
-            onClicked: {
-                loginScreen.showKeyboard = !loginScreen.showKeyboard;
-            }
-            tooltipText: "Toggle virtual keyboard"
         }
     }
 
@@ -263,7 +232,7 @@ Item {
             onClicked: {
                 popup.open();
             }
-            tooltipText: "Power options"
+            tooltipText: "Power Options"
 
             Popup {
                 id: popup
@@ -475,8 +444,6 @@ Item {
                 createdObject = sessionMenuComponent.createObject(pos, {});
             else if (menus[i].name === "layout")
                 createdObject = layoutMenuComponent.createObject(pos, {});
-            else if (menus[i].name === "keyboard")
-                createdObject = keyboardMenuComponent.createObject(pos, {});
             else if (menus[i].name === "power")
                 createdObject = powerMenuComponent.createObject(pos, {});
 

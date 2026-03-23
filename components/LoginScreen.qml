@@ -27,8 +27,6 @@ Item {
     readonly property alias loginButton: loginButton
     readonly property alias loginContainer: loginContainer
 
-    property bool showKeyboard: !Config.virtualKeyboardStartHidden
-
     property bool foundUsers: userModel.count > 0
 
     property int sessionIndex: 0
@@ -412,7 +410,6 @@ Item {
     }
 
     MenuArea {}
-    VirtualKeyboard {}
 
     Keys.onPressed: function (event) {
         if (event.key === Qt.Key_Escape) {

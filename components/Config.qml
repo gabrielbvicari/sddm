@@ -209,19 +209,6 @@ QtObject {
     property string layoutIcon: config.stringValue("LoginScreen.MenuArea.Layout/icon") || "language.svg" // @possible:File in `icons/` @desc:Icon in the layout button.
     property int layoutIconSize: config.intValue("LoginScreen.MenuArea.Layout/icon-size") || 16 // @desc:Size of the icon in the layout button.
 
-    // [LoginScreen.MenuArea.Keyboard]
-    property bool keyboardDisplay: config["LoginScreen.MenuArea.Keyboard/display"] === "false" ? false : true // @desc:Whether or not to display the virtual keyboard toggle button.
-    property string keyboardPosition: config.stringValue("LoginScreen.MenuArea.Keyboard/position") // @possible:'top-left' | 'top-center' | 'top-right' | 'center-left' | 'center-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' @default:bottom-right @desc:Position of the virtual keyboard toggle button.
-    property int keyboardIndex: config.intValue("LoginScreen.MenuArea.Keyboard/index") // @default:2 @desc:This number is used to sort menu buttons placed in the same position.
-    property color keyboardBackgroundColor: config.stringValue("LoginScreen.MenuArea.Keyboard/background-color") || "#FFFFFF" // @desc:Background color of the virtual keyboard toggle button.
-    property real keyboardBackgroundOpacity: config.realValue("LoginScreen.MenuArea.Keyboard/background-opacity") // @possible:0.0 ≤ R ≤ 1.0 @desc:Opacity of the background of the virtual keyboard toggle button
-    property real keyboardActiveBackgroundOpacity: config.realValue("LoginScreen.MenuArea.Keyboard/active-background-opacity") // @possible:0.0 ≤ R ≤ 1.0 @desc:Opacity of the background of the virtual keyboard toggle button when hovered/focused.
-    property color keyboardContentColor: config.stringValue("LoginScreen.MenuArea.Keyboard/content-color") || "#FFFFFF" // @desc:Color of the icon in the virtual keyboard toggle button.
-    property color keyboardActiveContentColor: config.stringValue("LoginScreen.MenuArea.Keyboard/active-content-color") || "#FFFFFF" // @desc:Color of the icon in the virtual keyboard toggle button when hovered/focused.
-    property int keyboardBorderSize: config.intValue("LoginScreen.MenuArea.Keyboard/border-size") // @desc:Border size of the virtual keyboard toggle button. The color of the border is defined by 'content-color' and 'active-content-color'.
-    property string keyboardIcon: config.stringValue("LoginScreen.MenuArea.Keyboard/icon") || "keyboard.svg" // @possible:File in `icons/` @desc:Icon in the virtual keyboard toggle button.
-    property int keyboardIconSize: config.intValue("LoginScreen.MenuArea.Keyboard/icon-size") || 16 // @desc:Size of the icon in the virtual keyboard toggle button.
-
     // [LoginScreen.MenuArea.Power]
     property bool powerDisplay: config["LoginScreen.MenuArea.Power/display"] === "false" ? false : true // @desc:Whether or not to display the power button.
     property string powerPosition: config.stringValue("LoginScreen.MenuArea.Power/position") // @possible:'top-left' | 'top-center' | 'top-right' | 'center-left' | 'center-right' | 'bottom-left' | 'bottom-center' | 'bottom-right' @default:bottom-right @desc:Position of the power button.
@@ -237,23 +224,6 @@ QtObject {
     property int powerBorderSize: config.intValue("LoginScreen.MenuArea.Power/border-size") // @desc:Border size of the power button. The color of the border is defined by 'content-color' and 'active-content-color'.
     property string powerIcon: config.stringValue("LoginScreen.MenuArea.Power/icon") || "power.svg" // @possible:File in `icons/` @desc:Icon in the power button.
     property int powerIconSize: config.intValue("LoginScreen.MenuArea.Power/icon-size") || 16 // @desc:Size of the icon in the power button.
-
-    // [LoginScreen.VirtualKeyboard]
-    property real virtualKeyboardScale: config.realValue("LoginScreen.VirtualKeyboard/scale") || 1.0 // @desc:Scale of the virtual keyboard.
-    property string virtualKeyboardPosition: config.stringValue("LoginScreen.VirtualKeyboard/position") || "login" // @possible: 'login' | 'top' | 'bottom' | 'left' | 'right' @desc:Initial position of the virtual keyboard. You can drag the keyboard using the middle mouse button.
-    property bool virtualKeyboardStartHidden: config['LoginScreen.VirtualKeyboard/start-hidden'] === "false" ? false : true // @desc:Whether or not the virtual keyboard should start hidden.
-    property color virtualKeyboardBackgroundColor: config.stringValue("LoginScreen.VirtualKeyboard/background-color") || "#FFFFFF" // @desc:Color of the background of the virtual keyboard.
-    property real virtualKeyboardBackgroundOpacity: config.realValue("LoginScreen.VirtualKeyboard/background-opacity") // @possible:0.0 ≤ R ≤ 1.0 @desc:Opacity of the background of the virtual keyboard.
-    property color virtualKeyboardKeyContentColor: config.stringValue("LoginScreen.VirtualKeyboard/key-content-color") || "#FFFFFF" // @desc:Color of the keys' text/icon in the virtual keyboard.
-    property color virtualKeyboardKeyColor: config.stringValue("LoginScreen.VirtualKeyboard/key-color") || "#FFFFFF" // @desc:Color of the background of the keys in the virtual keyboard.
-    property real virtualKeyboardKeyOpacity: config.realValue("LoginScreen.VirtualKeyboard/key-opacity") // @possible:0.0 ≤ R ≤ 1.0 @desc:Opacity of the background of the keys in the virtual keybaord.
-    property color virtualKeyboardKeyActiveBackgroundColor: config.stringValue("LoginScreen.VirtualKeyboard/key-active-background-color") || "#FFFFFF" // @desc:Color of the background of the special keys in the virtual keyboard.
-    property real virtualKeyboardKeyActiveOpacity: config.realValue("LoginScreen.VirtualKeyboard/key-active-opacity") // @possible:0.0 ≤ R ≤ 1.0 @desc:Opacity of the background of the special keys in the virtual keyboard.
-    property color virtualKeyboardSelectionBackgroundColor: config.stringValue("LoginScreen.VirtualKeyboard/selection-background-color") || "#CCCCCC" // @desc:Color of the background of the selected character in the virtual keyboard.
-    property color virtualKeyboardSelectionContentColor: config.stringValue("LoginScreen.VirtualKeyboard/selection-content-color") || "#FFFFFF" // @desc:Color of the text of the selected character in the virtual keyboard.
-    property color virtualKeyboardPrimaryColor: config.stringValue("LoginScreen.VirtualKeyboard/primary-color") || "#000000" // @desc:Color of the icon/text in special keys when they're active.
-    property int virtualKeyboardBorderSize: config.intValue("LoginScreen.VirtualKeyboard/border-size") // @desc:Border size of the virtual keyboard and its keys.
-    property color virtualKeyboardBorderColor: config.stringValue("LoginScreen.VirtualKeyboard/border-color") || "#000000" // @desc:Color of the border of the virtual keyboard and its keys.
 
     // [Tooltips]
     property bool tooltipsEnable: config['Tooltips/enable'] === "false" ? false : true // @desc:Whether or not to show tooltips when hovering over buttons.
@@ -284,14 +254,6 @@ QtObject {
                 index: layoutIndex,
                 def_index: 1,
                 position: available_positions.includes(layoutPosition) ? layoutPosition : "bottom-right"
-            });
-
-        if (keyboardDisplay)
-            menus.push({
-                name: "keyboard",
-                index: keyboardIndex,
-                def_index: 2,
-                position: available_positions.includes(keyboardPosition) ? keyboardPosition : "bottom-right"
             });
 
         if (powerDisplay)
