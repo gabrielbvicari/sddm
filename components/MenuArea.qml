@@ -3,14 +3,111 @@ import QtQuick.Controls
 
 Item {
     id: menuArea
+
+    property var createdObjects: []
+
+    function calculatePopupPos(direction, align, popup, button) {
+        var popupMargin = Config.menuAreaPopupsMargin;
+        var x = 0, y = 0;
+        if (direction === "up") {
+            y = -popup.height - popupMargin;
+            if (align === "start")
+                x = 0;
+            else if (align === "end")
+                x = -popup.width + button.width;
+            else
+                x = (button.width - popup.width) / 2;
+        } else if (direction === "down") {
+            y = button.height + popupMargin;
+            if (align === "start")
+                x = 0;
+            else if (align === "end")
+                x = -popup.width + button.width;
+            else
+                x = (button.width - popup.width) / 2;
+        } else if (direction === "left") {
+            x = -popup.width - popupMargin;
+            if (align === "start")
+                y = 0;
+            else if (align === "end")
+                y = -popup.height + button.height;
+            else
+                y = (button.height - popup.height) / 2;
+        } else {
+            x = button.width + popupMargin;
+            if (align === "start")
+                y = 0;
+            else if (align === "end")
+                y = -popup.height + button.height;
+            else
+                y = (button.height - popup.height) / 2;
+        }
+        return [x, y];
+    }
+
     anchors.fill: parent
+    Component.onCompleted: {
+        var menus = Config.sortMenuButtons();
+        for (var i = 0; i < menus.length; i++) {
+            var pos;
+            switch (menus[i].position) {
+            case "top-left":
+                pos = topLeftButtons;
+                break;
+            case "top-center":
+                pos = topCenterButtons;
+                break;
+            case "top-right":
+                pos = topRightButtons;
+                break;
+            case "center-left":
+                pos = centerLeftButtons;
+                break;
+            case "center-right":
+                pos = centerRightButtons;
+                break;
+            case "bottom-left":
+                pos = bottomLeftButtons;
+                break;
+            case "bottom-center":
+                pos = bottomCenterButtons;
+                break;
+            case "bottom-right":
+                pos = bottomRightButtons;
+                break;
+            }
+            var createdObject;
+            if (menus[i].name === "session")
+                createdObject = sessionMenuComponent.createObject(pos, {
+            });
+            else if (menus[i].name === "layout")
+                createdObject = layoutMenuComponent.createObject(pos, {
+            });
+            else if (menus[i].name === "power")
+                createdObject = powerMenuComponent.createObject(pos, {
+            });
+            if (createdObject)
+                createdObjects.push(createdObject);
+
+        }
+    }
+    Component.onDestruction: {
+        for (var i = 0; i < createdObjects.length; i++) {
+            if (createdObjects[i])
+                createdObjects[i].destroy();
+
+        }
+        createdObjects = [];
+    }
 
     Component {
         id: sessionMenuComponent
 
         IconButton {
             id: sessionButton
+
             property bool showLabel: Config.sessionDisplaySessionName
+
             preferredWidth: showLabel ? (Config.sessionButtonWidth === -1 ? undefined : Config.sessionButtonWidth) : Config.menuAreaButtonsSize
             height: Config.menuAreaButtonsSize * Config.generalScale
             iconSize: Config.sessionIconSize
@@ -29,18 +126,41 @@ Item {
             activeFocusOnTab: true
             focus: false
             onClicked: {
-                if (loginScreen.isSelectingUser) {
+                if (loginScreen.isSelectingUser)
                     loginScreen.isSelectingUser = false;
-                } else {
+                else
                     popup.open();
-                }
             }
             tooltipText: "Change session"
 
             Popup {
                 id: popup
+
                 parent: sessionButton
                 padding: Config.menuAreaPopupsPadding
+                dim: true
+                onOpened: loginScreen.safeStateChange("popup")
+                onClosed: loginScreen.safeStateChange("normal")
+                modal: true
+                popupType: Popup.Item
+                closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+                focus: visible
+                Component.onCompleted: {
+                    [x, y] = menuArea.calculatePopupPos(Config.sessionPopupDirection, Config.sessionPopupAlign, popup, sessionButton);
+                }
+
+                SessionSelector {
+                    focus: popup.focus
+                    onSessionChanged: function(newSessionIndex, sessionIcon, sessionLabel) {
+                        loginScreen.sessionIndex = newSessionIndex;
+                        sessionButton.icon = sessionIcon;
+                        sessionButton.label = sessionButton.showLabel ? sessionLabel : "";
+                    }
+                    onClose: {
+                        popup.close();
+                    }
+                }
+
                 background: Rectangle {
                     color: Config.menuAreaPopupsBackgroundColor
                     opacity: Config.menuAreaPopupsBackgroundOpacity
@@ -51,50 +171,34 @@ Item {
                         visible: Config.menuAreaPopupsBorderSize > 0
                         radius: parent.radius
                         color: "transparent"
+
                         border {
                             color: Config.menuAreaPopupsBorderColor
                             width: Config.menuAreaPopupsBorderSize * Config.generalScale
                         }
+
                     }
+
                 }
-                dim: true
+
                 Overlay.modal: Rectangle {
                     color: "transparent"
+
                     MouseArea {
                         anchors.fill: parent
                         hoverEnabled: true
-                        onClicked: function (event) {
+                        onClicked: function(event) {
                             popup.close();
                             event.accepted = true;
                         }
                     }
+
                 }
 
-                onOpened: loginScreen.safeStateChange("popup")
-                onClosed: loginScreen.safeStateChange("normal")
-
-                modal: true
-                popupType: Popup.Item
-                closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-                focus: visible
-
-                SessionSelector {
-                    focus: popup.focus
-                    onSessionChanged: function (newSessionIndex, sessionIcon, sessionLabel) {
-                        loginScreen.sessionIndex = newSessionIndex;
-                        sessionButton.icon = sessionIcon;
-                        sessionButton.label = sessionButton.showLabel ? sessionLabel : "";
-                    }
-                    onClose: {
-                        popup.close();
-                    }
-                }
-
-                Component.onCompleted: {
-                    [x, y] = menuArea.calculatePopupPos(Config.sessionPopupDirection, Config.sessionPopupAlign, popup, sessionButton);
-                }
             }
+
         }
+
     }
 
     Component {
@@ -123,36 +227,56 @@ Item {
             enabled: loginScreen.state === "normal" || popup.visible
             focus: false
             onClicked: {
-                if (loginScreen.isSelectingUser) {
+                if (loginScreen.isSelectingUser)
                     loginScreen.isSelectingUser = false;
-                } else {
+                else
                     popup.open();
-                }
             }
             tooltipText: "Change keyboard layout"
             label: showLabel ? (keyboard && keyboard.layouts && keyboard.currentLayout >= 0 && keyboard.currentLayout < keyboard.layouts.length ? keyboard.layouts[keyboard.currentLayout].shortName.toUpperCase() : "") : ""
+            Component.onDestruction: {
+                if (typeof connections !== 'undefined')
+                    connections.target = null;
 
-            Connections {
-                target: loginScreen
-                function onToggleLayoutPopup() {
-                    if (popup.visible) {
-                        popup.close();
-                    } else {
-                        popup.open();
-                    }
-                }
             }
 
-            Component.onDestruction: {
-                if (typeof connections !== 'undefined') {
-                    connections.target = null;
+            Connections {
+                function onToggleLayoutPopup() {
+                    if (popup.visible)
+                        popup.close();
+                    else
+                        popup.open();
                 }
+
+                target: loginScreen
             }
 
             Popup {
                 id: popup
+
                 parent: layoutButton
                 padding: Config.menuAreaPopupsPadding
+                focus: visible
+                dim: true
+                onOpened: loginScreen.safeStateChange("popup")
+                onClosed: loginScreen.safeStateChange("normal")
+                modal: true
+                popupType: Popup.Item
+                closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+                Component.onCompleted: {
+                    [x, y] = menuArea.calculatePopupPos(Config.layoutPopupDirection, Config.layoutPopupAlign, popup, layoutButton);
+                }
+
+                LayoutSelector {
+                    focus: popup.focus
+                    onLayoutChanged: function(index) {
+                        layoutButton.label = showLabel ? (keyboard && keyboard.layouts && keyboard.currentLayout >= 0 && keyboard.currentLayout < keyboard.layouts.length ? keyboard.layouts[keyboard.currentLayout].shortName.toUpperCase() : "") : "";
+                    }
+                    onClose: {
+                        popup.close();
+                    }
+                }
+
                 background: Rectangle {
                     color: Config.menuAreaPopupsBackgroundColor
                     opacity: Config.menuAreaPopupsBackgroundOpacity
@@ -163,47 +287,34 @@ Item {
                         visible: Config.menuAreaPopupsBorderSize > 0
                         radius: parent.radius
                         color: "transparent"
+
                         border {
                             color: Config.menuAreaPopupsBorderColor
                             width: Config.menuAreaPopupsBorderSize * Config.generalScale
                         }
+
                     }
+
                 }
-                focus: visible
-                dim: true
+
                 Overlay.modal: Rectangle {
                     color: "transparent"
+
                     MouseArea {
                         anchors.fill: parent
                         hoverEnabled: true
-                        onClicked: function (event) {
+                        onClicked: function(event) {
                             popup.close();
                             event.accepted = true;
                         }
                     }
+
                 }
 
-                onOpened: loginScreen.safeStateChange("popup")
-                onClosed: loginScreen.safeStateChange("normal")
-
-                modal: true
-                popupType: Popup.Item
-                closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-                LayoutSelector {
-                    focus: popup.focus
-                    onLayoutChanged: function (index) {
-                        layoutButton.label = showLabel ? (keyboard && keyboard.layouts && keyboard.currentLayout >= 0 && keyboard.currentLayout < keyboard.layouts.length ? keyboard.layouts[keyboard.currentLayout].shortName.toUpperCase() : "") : "";
-                    }
-                    onClose: {
-                        popup.close();
-                    }
-                }
-
-                Component.onCompleted: {
-                    [x, y] = menuArea.calculatePopupPos(Config.layoutPopupDirection, Config.layoutPopupAlign, popup, layoutButton);
-                }
             }
+
         }
+
     }
 
     Component {
@@ -236,7 +347,27 @@ Item {
 
             Popup {
                 id: popup
+
                 parent: powerButton
+                dim: true
+                padding: Config.menuAreaPopupsPadding
+                onOpened: loginScreen.safeStateChange("popup")
+                onClosed: loginScreen.safeStateChange("normal")
+                modal: true
+                popupType: Popup.Item
+                closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+                focus: visible
+                Component.onCompleted: {
+                    [x, y] = menuArea.calculatePopupPos(Config.powerPopupDirection, Config.powerPopupAlign, popup, powerButton);
+                }
+
+                PowerMenu {
+                    focus: popup.focus
+                    onClose: {
+                        popup.close();
+                    }
+                }
+
                 background: Rectangle {
                     color: Config.menuAreaPopupsBackgroundColor
                     opacity: Config.menuAreaPopupsBackgroundOpacity
@@ -247,46 +378,34 @@ Item {
                         visible: Config.menuAreaPopupsBorderSize > 0
                         radius: parent.radius
                         color: "transparent"
+
                         border {
                             color: Config.menuAreaPopupsBorderColor
                             width: Config.menuAreaPopupsBorderSize * Config.generalScale
                         }
+
                     }
+
                 }
-                dim: true
-                padding: Config.menuAreaPopupsPadding
+
                 Overlay.modal: Rectangle {
                     color: "transparent"
+
                     MouseArea {
                         anchors.fill: parent
                         hoverEnabled: true
-                        onClicked: function (event) {
+                        onClicked: function(event) {
                             popup.close();
                             event.accepted = true;
                         }
                     }
+
                 }
 
-                onOpened: loginScreen.safeStateChange("popup")
-                onClosed: loginScreen.safeStateChange("normal")
-
-                modal: true
-                popupType: Popup.Item
-                closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
-                focus: visible
-
-                PowerMenu {
-                    focus: popup.focus
-                    onClose: {
-                        popup.close();
-                    }
-                }
-
-                Component.onCompleted: {
-                    [x, y] = menuArea.calculatePopupPos(Config.powerPopupDirection, Config.powerPopupAlign, popup, powerButton);
-                }
             }
+
         }
+
     }
 
     Row {
@@ -302,6 +421,7 @@ Item {
             topMargin: Config.menuAreaButtonsMarginTop
             leftMargin: Config.menuAreaButtonsMarginLeft
         }
+
     }
 
     Row {
@@ -316,6 +436,7 @@ Item {
             horizontalCenter: parent.horizontalCenter
             topMargin: Config.menuAreaButtonsMarginTop
         }
+
     }
 
     Row {
@@ -331,6 +452,7 @@ Item {
             topMargin: Config.menuAreaButtonsMarginTop
             rightMargin: Config.menuAreaButtonsMarginRight
         }
+
     }
 
     Column {
@@ -345,6 +467,7 @@ Item {
             verticalCenter: parent.verticalCenter
             leftMargin: Config.menuAreaButtonsMarginLeft
         }
+
     }
 
     Column {
@@ -359,6 +482,7 @@ Item {
             verticalCenter: parent.verticalCenter
             rightMargin: Config.menuAreaButtonsMarginRight
         }
+
     }
 
     Row {
@@ -374,6 +498,7 @@ Item {
             bottomMargin: Config.menuAreaButtonsMarginBottom
             leftMargin: Config.menuAreaButtonsMarginLeft
         }
+
     }
 
     Row {
@@ -388,6 +513,7 @@ Item {
             horizontalCenter: parent.horizontalCenter
             bottomMargin: Config.menuAreaButtonsMarginBottom
         }
+
     }
 
     Row {
@@ -403,106 +529,7 @@ Item {
             bottomMargin: Config.menuAreaButtonsMarginBottom
             rightMargin: Config.menuAreaButtonsMarginRight
         }
+
     }
 
-    property var createdObjects: []
-
-    Component.onCompleted: {
-        var menus = Config.sortMenuButtons();
-
-        for (var i = 0; i < menus.length; i++) {
-            var pos;
-            switch (menus[i].position) {
-            case "top-left":
-                pos = topLeftButtons;
-                break;
-            case "top-center":
-                pos = topCenterButtons;
-                break;
-            case "top-right":
-                pos = topRightButtons;
-                break;
-            case "center-left":
-                pos = centerLeftButtons;
-                break;
-            case "center-right":
-                pos = centerRightButtons;
-                break;
-            case "bottom-left":
-                pos = bottomLeftButtons;
-                break;
-            case "bottom-center":
-                pos = bottomCenterButtons;
-                break;
-            case "bottom-right":
-                pos = bottomRightButtons;
-                break;
-            }
-
-            var createdObject;
-            if (menus[i].name === "session")
-                createdObject = sessionMenuComponent.createObject(pos, {});
-            else if (menus[i].name === "layout")
-                createdObject = layoutMenuComponent.createObject(pos, {});
-            else if (menus[i].name === "power")
-                createdObject = powerMenuComponent.createObject(pos, {});
-
-            if (createdObject) {
-                createdObjects.push(createdObject);
-            }
-        }
-    }
-
-    Component.onDestruction: {
-        for (var i = 0; i < createdObjects.length; i++) {
-            if (createdObjects[i]) {
-                createdObjects[i].destroy();
-            }
-        }
-        createdObjects = [];
-    }
-
-    function calculatePopupPos(direction, align, popup, button) {
-        var popupMargin = Config.menuAreaPopupsMargin;
-        var x = 0, y = 0;
-
-        if (direction === "up") {
-            y = -popup.height - popupMargin;
-            if (align === "start") {
-                x = 0;
-            } else if (align === "end") {
-                x = -popup.width + button.width;
-            } else {
-                x = (button.width - popup.width) / 2;
-            }
-        } else if (direction === "down") {
-            y = button.height + popupMargin;
-            if (align === "start") {
-                x = 0;
-            } else if (align === "end") {
-                x = -popup.width + button.width;
-            } else {
-                x = (button.width - popup.width) / 2;
-            }
-        } else if (direction === "left") {
-            x = -popup.width - popupMargin;
-            if (align === "start") {
-                y = 0;
-            } else if (align === "end") {
-                y = -popup.height + button.height;
-            } else {
-                y = (button.height - popup.height) / 2;
-            }
-        } else {
-            x = button.width + popupMargin;
-            if (align === "start") {
-                y = 0;
-            } else if (align === "end") {
-                y = -popup.height + button.height;
-            } else {
-                y = (button.height - popup.height) / 2;
-            }
-        }
-        return [x, y];
-    }
 }

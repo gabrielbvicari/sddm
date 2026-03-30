@@ -1,119 +1,12 @@
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Effects
 import QtQuick.Layouts
-import QtQuick.Controls
 
 Item {
     id: lockScreen
-    signal loginRequested
 
-    ColumnLayout {
-        id: timePositioner
-        spacing: Config.dateMarginTop
-        Text {
-            id: time
-            visible: Config.clockDisplay
-            font.pixelSize: Config.clockFontSize * Config.generalScale
-            font.weight: Config.clockFontWeight
-            font.family: Config.clockFontFamily
-            color: Config.clockColor
-            Layout.alignment: Config.clockAlign === "left" ? Qt.AlignLeft : (Config.clockAlign === "right" ? Qt.AlignRight : Qt.AlignHCenter)
-
-            function updateTime() {
-                text = new Date().toLocaleString(Qt.locale(Config.dateLocale), Config.clockFormat);
-            }
-        }
-
-        Text {
-            id: date
-            Layout.alignment: Config.clockAlign === "left" ? Qt.AlignLeft : (Config.clockAlign === "right" ? Qt.AlignRight : Qt.AlignHCenter)
-            visible: Config.dateDisplay
-            font.pixelSize: Config.dateFontSize * Config.generalScale
-            font.family: Config.dateFontFamily
-            font.weight: Config.dateFontWeight
-            color: Config.dateColor
-
-            function updateDate() {
-                text = new Date().toLocaleString(Qt.locale(Config.dateLocale), Config.dateFormat);
-            }
-        }
-
-        Timer {
-            id: clockTimer
-            interval: 1000
-            repeat: true
-            running: true
-            onTriggered: {
-                time.updateTime();
-                date.updateDate();
-            }
-        }
-
-        Component.onDestruction: {
-            if (clockTimer) {
-                clockTimer.stop();
-            }
-        }
-
-        anchors {
-            topMargin: Config.lockScreenPaddingTop || (lockScreen.height > 0 ? lockScreen.height / 10 : 50)
-            rightMargin: Config.lockScreenPaddingRight || (lockScreen.height > 0 ? lockScreen.height / 10 : 50)
-            bottomMargin: Config.lockScreenPaddingBottom || (lockScreen.height > 0 ? lockScreen.height / 10 : 50)
-            leftMargin: Config.lockScreenPaddingLeft || (lockScreen.height > 0 ? lockScreen.height / 10 : 50)
-        }
-        Component.onCompleted: {
-            lockScreen.alignItem(timePositioner, Config.clockPosition);
-            time.updateTime();
-            date.updateDate();
-        }
-    }
-
-    ColumnLayout {
-        id: messagePositioner
-        visible: Config.lockMessageDisplay
-        spacing: Config.lockMessageSpacing
-        Item {
-            Layout.alignment: Config.lockMessageAlign === "left" ? Qt.AlignLeft : (Config.lockMessageAlign === "right" ? Qt.AlignRight : Qt.AlignHCenter)
-            Layout.preferredWidth: Config.lockMessageIconSize
-            Layout.preferredHeight: Config.lockMessageIconSize
-
-            Image {
-                id: lockIcon
-                source: Config.getIcon(Config.lockMessageIcon)
-                width: Config.lockMessageIconSize * Config.generalScale
-                height: width
-                sourceSize: Qt.size(width, height)
-                fillMode: Image.PreserveAspectFit
-                visible: false
-            }
-            MultiEffect {
-                source: lockIcon
-                anchors.fill: lockIcon
-                colorization: Config.lockMessagePaintIcon ? 1 : 0
-                colorizationColor: Config.lockMessageColor
-                visible: Config.lockMessageDisplayIcon
-                antialiasing: true
-            }
-        }
-
-        Text {
-            id: lockMessage
-            Layout.alignment: Config.lockMessageAlign === "left" ? Qt.AlignLeft : (Config.lockMessageAlign === "right" ? Qt.AlignRight : Qt.AlignHCenter)
-            font.pixelSize: Config.lockMessageFontSize * Config.generalScale
-            font.family: Config.lockMessageFontFamily
-            font.weight: Config.lockMessageFontWeight
-            color: Config.lockMessageColor
-            text: Config.lockMessageText
-        }
-
-        anchors {
-            topMargin: Config.lockScreenPaddingTop || (lockScreen.height > 0 ? lockScreen.height / 10 : 50)
-            rightMargin: Config.lockScreenPaddingRight || (lockScreen.height > 0 ? lockScreen.height / 10 : 50)
-            bottomMargin: Config.lockScreenPaddingBottom || (lockScreen.height > 0 ? lockScreen.height / 10 : 50)
-            leftMargin: Config.lockScreenPaddingLeft || (lockScreen.height > 0 ? lockScreen.height / 10 : 50)
-        }
-        Component.onCompleted: lockScreen.alignItem(messagePositioner, Config.lockMessagePosition)
-    }
+    signal loginRequested()
 
     function alignItem(item, pos) {
         switch (pos) {
@@ -155,25 +48,146 @@ Item {
         }
     }
 
+    Keys.onPressed: function(event) {
+        if (event.key === Qt.Key_CapsLock)
+            root.capsLockOn = !root.capsLockOn;
+
+        if (event.key === Qt.Key_Escape) {
+            event.accepted = false;
+            return ;
+        } else {
+            lockScreen.loginRequested();
+        }
+        event.accepted = true;
+    }
+
+    ColumnLayout {
+        id: timePositioner
+
+        spacing: Config.dateMarginTop
+        Component.onDestruction: {
+            if (clockTimer)
+                clockTimer.stop();
+
+        }
+        Component.onCompleted: {
+            lockScreen.alignItem(timePositioner, Config.clockPosition);
+            time.updateTime();
+            date.updateDate();
+        }
+
+        Text {
+            id: time
+
+            function updateTime() {
+                text = new Date().toLocaleString(Qt.locale(Config.dateLocale), Config.clockFormat);
+            }
+
+            visible: Config.clockDisplay
+            font.pixelSize: Config.clockFontSize * Config.generalScale
+            font.weight: Config.clockFontWeight
+            font.family: Config.clockFontFamily
+            color: Config.clockColor
+            Layout.alignment: Config.clockAlign === "left" ? Qt.AlignLeft : (Config.clockAlign === "right" ? Qt.AlignRight : Qt.AlignHCenter)
+        }
+
+        Text {
+            id: date
+
+            function updateDate() {
+                text = new Date().toLocaleString(Qt.locale(Config.dateLocale), Config.dateFormat);
+            }
+
+            Layout.alignment: Config.clockAlign === "left" ? Qt.AlignLeft : (Config.clockAlign === "right" ? Qt.AlignRight : Qt.AlignHCenter)
+            visible: Config.dateDisplay
+            font.pixelSize: Config.dateFontSize * Config.generalScale
+            font.family: Config.dateFontFamily
+            font.weight: Config.dateFontWeight
+            color: Config.dateColor
+        }
+
+        Timer {
+            id: clockTimer
+
+            interval: 1000
+            repeat: true
+            running: true
+            onTriggered: {
+                time.updateTime();
+                date.updateDate();
+            }
+        }
+
+        anchors {
+            topMargin: Config.lockScreenPaddingTop || (lockScreen.height > 0 ? lockScreen.height / 10 : 50)
+            rightMargin: Config.lockScreenPaddingRight || (lockScreen.height > 0 ? lockScreen.height / 10 : 50)
+            bottomMargin: Config.lockScreenPaddingBottom || (lockScreen.height > 0 ? lockScreen.height / 10 : 50)
+            leftMargin: Config.lockScreenPaddingLeft || (lockScreen.height > 0 ? lockScreen.height / 10 : 50)
+        }
+
+    }
+
+    ColumnLayout {
+        id: messagePositioner
+
+        visible: Config.lockMessageDisplay
+        spacing: Config.lockMessageSpacing
+        Component.onCompleted: lockScreen.alignItem(messagePositioner, Config.lockMessagePosition)
+
+        Item {
+            Layout.alignment: Config.lockMessageAlign === "left" ? Qt.AlignLeft : (Config.lockMessageAlign === "right" ? Qt.AlignRight : Qt.AlignHCenter)
+            Layout.preferredWidth: Config.lockMessageIconSize
+            Layout.preferredHeight: Config.lockMessageIconSize
+
+            Image {
+                id: lockIcon
+
+                source: Config.getIcon(Config.lockMessageIcon)
+                width: Config.lockMessageIconSize * Config.generalScale
+                height: width
+                sourceSize: Qt.size(width, height)
+                fillMode: Image.PreserveAspectFit
+                visible: false
+            }
+
+            MultiEffect {
+                source: lockIcon
+                anchors.fill: lockIcon
+                colorization: Config.lockMessagePaintIcon ? 1 : 0
+                colorizationColor: Config.lockMessageColor
+                visible: Config.lockMessageDisplayIcon
+                antialiasing: true
+            }
+
+        }
+
+        Text {
+            id: lockMessage
+
+            Layout.alignment: Config.lockMessageAlign === "left" ? Qt.AlignLeft : (Config.lockMessageAlign === "right" ? Qt.AlignRight : Qt.AlignHCenter)
+            font.pixelSize: Config.lockMessageFontSize * Config.generalScale
+            font.family: Config.lockMessageFontFamily
+            font.weight: Config.lockMessageFontWeight
+            color: Config.lockMessageColor
+            text: Config.lockMessageText
+        }
+
+        anchors {
+            topMargin: Config.lockScreenPaddingTop || (lockScreen.height > 0 ? lockScreen.height / 10 : 50)
+            rightMargin: Config.lockScreenPaddingRight || (lockScreen.height > 0 ? lockScreen.height / 10 : 50)
+            bottomMargin: Config.lockScreenPaddingBottom || (lockScreen.height > 0 ? lockScreen.height / 10 : 50)
+            leftMargin: Config.lockScreenPaddingLeft || (lockScreen.height > 0 ? lockScreen.height / 10 : 50)
+        }
+
+    }
+
     MouseArea {
         id: lockScreenMouseArea
+
         hoverEnabled: true
         z: -1
         anchors.fill: lockScreen
         onClicked: lockScreen.loginRequested()
     }
 
-    Keys.onPressed: function (event) {
-        if (event.key === Qt.Key_CapsLock) {
-            root.capsLockOn = !root.capsLockOn;
-        }
-
-        if (event.key === Qt.Key_Escape) {
-            event.accepted = false;
-            return;
-        } else {
-            lockScreen.loginRequested();
-        }
-        event.accepted = true;
-    }
 }

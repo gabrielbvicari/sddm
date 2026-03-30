@@ -1,5 +1,5 @@
-pragma Singleton
 import QtQuick
+pragma Singleton
 
 QtObject {
     property var layouts: {
@@ -184,4 +184,5 @@ QtObject {
     function getLabelFor(country) {
         return country && layouts[country] ? layouts[country]["label"] : "";
     }
+
 }

@@ -1,16 +1,22 @@
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Controls
+import QtQuick.Layouts
 
 ColumnLayout {
     id: selector
+
+    signal close()
+
     width: Config.powerPopupWidth * Config.generalScale
     spacing: 2
-
-    signal close
-
     KeyNavigation.up: shutdownButton
     KeyNavigation.down: suspendButton
+    Keys.onPressed: function(event) {
+        if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter || event.key === Qt.Key_Space)
+            selector.close();
+        else if (event.key === Qt.Key_CapsLock)
+            root.capsLockOn = !root.capsLockOn;
+    }
 
     IconButton {
         id: suspendButton
@@ -18,7 +24,6 @@ ColumnLayout {
         preferredWidth: Layout.preferredWidth
         Layout.preferredHeight: Config.menuAreaPopupsItemHeight * Config.generalScale
         Layout.preferredWidth: Config.powerPopupWidth * Config.generalScale
-
         focus: selector.visible
         width: Layout.preferredWidth
         enabled: sddm.canSuspend
@@ -36,7 +41,6 @@ ColumnLayout {
             sddm.suspend();
         }
         label: textConstants.suspend
-
         KeyNavigation.up: shutdownButton
         KeyNavigation.down: rebootButton
     }
@@ -47,7 +51,6 @@ ColumnLayout {
         preferredWidth: Layout.preferredWidth
         Layout.preferredHeight: Config.menuAreaPopupsItemHeight * Config.generalScale
         Layout.preferredWidth: Config.powerPopupWidth * Config.generalScale
-
         focus: selector.visible
         width: Layout.preferredWidth
         enabled: sddm.canReboot
@@ -65,7 +68,6 @@ ColumnLayout {
             sddm.reboot();
         }
         label: textConstants.reboot
-
         KeyNavigation.up: suspendButton
         KeyNavigation.down: shutdownButton
     }
@@ -76,7 +78,6 @@ ColumnLayout {
         preferredWidth: Layout.preferredWidth
         Layout.preferredHeight: Config.menuAreaPopupsItemHeight * Config.generalScale
         Layout.preferredWidth: Config.powerPopupWidth * Config.generalScale
-
         focus: selector.visible
         width: Layout.preferredWidth
         enabled: sddm.canPowerOff
@@ -94,16 +95,8 @@ ColumnLayout {
             sddm.powerOff();
         }
         label: textConstants.shutdown
-
         KeyNavigation.up: rebootButton
         KeyNavigation.down: suspendButton
     }
 
-    Keys.onPressed: function (event) {
-        if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter || event.key === Qt.Key_Space) {
-            selector.close();
-        } else if (event.key === Qt.Key_CapsLock) {
-            root.capsLockOn = !root.capsLockOn;
-        }
-    }
 }

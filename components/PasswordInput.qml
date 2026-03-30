@@ -1,22 +1,23 @@
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Layouts
 import QtQuick.Effects
+import QtQuick.Layouts
 
 Item {
     id: passwordInput
 
-    signal accepted
-
     property alias input: textField
     property alias text: textField.text
     property bool enabled: true
+
+    signal accepted()
 
     width: Config.passwordInputWidth * Config.generalScale
     height: Config.passwordInputHeight * Config.generalScale
 
     TextField {
         id: textField
+
         anchors.fill: parent
         color: Config.passwordInputContentColor
         enabled: passwordInput.enabled
@@ -26,15 +27,6 @@ Item {
         verticalAlignment: TextField.AlignVCenter
         font.family: Config.passwordInputFontFamily
         font.pixelSize: Math.max(8, Config.passwordInputFontSize * Config.generalScale)
-        background: Rectangle {
-            anchors.fill: parent
-            color: Config.passwordInputBackgroundColor
-            opacity: Config.passwordInputBackgroundOpacity
-            topLeftRadius: Config.passwordInputBorderRadiusLeft
-            bottomLeftRadius: Config.passwordInputBorderRadiusLeft
-            topRightRadius: Config.passwordInputBorderRadiusRight
-            bottomRightRadius: Config.passwordInputBorderRadiusRight
-        }
         leftPadding: placeholderLabel.x
         rightPadding: 10
         onAccepted: passwordInput.accepted()
@@ -57,6 +49,7 @@ Item {
 
             Rectangle {
                 id: iconContainer
+
                 color: "transparent"
                 visible: Config.passwordInputDisplayIcon
                 height: parent.height
@@ -64,19 +57,14 @@ Item {
 
                 Image {
                     id: icon
+
                     source: Config.getIcon(Config.passwordInputIcon)
                     anchors.centerIn: parent
                     width: Math.max(1, Config.passwordInputIconSize * Config.generalScale)
                     height: width
                     sourceSize: Qt.size(width, height)
                     fillMode: Image.PreserveAspectFit
-                    opacity: passwordInput.enabled ? 1.0 : 0.3
-                    Behavior on opacity {
-                        enabled: Config.enableAnimations
-                        NumberAnimation {
-                            duration: 250
-                        }
-                    }
+                    opacity: passwordInput.enabled ? 1 : 0.3
 
                     MultiEffect {
                         source: parent
@@ -84,14 +72,23 @@ Item {
                         colorization: 1
                         colorizationColor: textField.color
                     }
+
+                    Behavior on opacity {
+                        enabled: Config.enableAnimations
+
+                        NumberAnimation {
+                            duration: 250
+                        }
+
+                    }
+
                 }
+
             }
 
             Text {
                 id: placeholderLabel
-                anchors {
-                    verticalCenter: parent.verticalCenter
-                }
+
                 padding: 0
                 visible: textField.text.length === 0 && (!textField.preeditText || textField.preeditText.length === 0)
                 text: (textConstants && textConstants.password) ? textConstants.password : "Password"
@@ -101,7 +98,25 @@ Item {
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: textField.verticalAlignment
                 font.italic: true
+
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                }
+
             }
+
         }
+
+        background: Rectangle {
+            anchors.fill: parent
+            color: Config.passwordInputBackgroundColor
+            opacity: Config.passwordInputBackgroundOpacity
+            topLeftRadius: Config.passwordInputBorderRadiusLeft
+            bottomLeftRadius: Config.passwordInputBorderRadiusLeft
+            topRightRadius: Config.passwordInputBorderRadiusRight
+            bottomRightRadius: Config.passwordInputBorderRadiusRight
+        }
+
     }
+
 }
