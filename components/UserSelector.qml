@@ -104,7 +104,7 @@ Item {
                 active: index === userList.currentIndex
                 opacity: active ? 1 : Config.avatarInactiveOpacity
                 enabled: userModel.rowCount() > 1
-                tooltipText: active && selector.listUsers ? "Close user selection" : (active && !listUsers ? "Select user" : `Select user ${model.name}`)
+                tooltipText: active && selector.listUsers ? "Close User Selection" : (active && !listUsers ? "Select User" : `Select User ${model.name}`)
                 showTooltip: selector.focus && !listUsers && active
                 onClicked: {
                     if (!selector.listUsers) {

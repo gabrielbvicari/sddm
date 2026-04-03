@@ -131,7 +131,7 @@ Item {
                 else
                     popup.open();
             }
-            tooltipText: "Change session"
+            tooltipText: "Change Session"
 
             Popup {
                 id: popup
@@ -232,7 +232,7 @@ Item {
                 else
                     popup.open();
             }
-            tooltipText: "Change keyboard layout"
+            tooltipText: "Change Keyboard Layout"
             label: showLabel ? (keyboard && keyboard.layouts && keyboard.currentLayout >= 0 && keyboard.currentLayout < keyboard.layouts.length ? keyboard.layouts[keyboard.currentLayout].shortName.toUpperCase() : "") : ""
             Component.onDestruction: {
                 if (typeof connections !== 'undefined')

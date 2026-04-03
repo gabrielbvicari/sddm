@@ -223,7 +223,7 @@ QtObject {
     // [LoginScreen.LoginArea.Spinner]
     property bool spinnerDisplayText: config['LoginScreen.LoginArea.Spinner/display-text'] === "false" ? false : true
     // @desc:Whether or not to display the text with the spinning icon.
-    property string spinnerText: config.stringValue("LoginScreen.LoginArea.Spinner/text") || "Logging in"
+    property string spinnerText: config.stringValue("LoginScreen.LoginArea.Spinner/text") || "Logging In"
     // @desc:Text to be displayed with the spinning icon.
     property string spinnerFontFamily: config.stringValue("LoginScreen.LoginArea.Spinner/font-family") || "RedHatDisplay"
     // @desc:Font family of the text to be displayed with the spinning icon.

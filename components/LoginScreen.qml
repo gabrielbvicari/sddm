@@ -35,7 +35,7 @@ Item {
             safeStateChange("authenticating");
             sddm.login(user, password.text, sessionIndex);
         } else {
-            loginMessage.warn(textConstants.promptUser || "Enter your user!", "error");
+            loginMessage.warn(textConstants.promptUser || "Enter Your User!", "error");
         }
     }
 
