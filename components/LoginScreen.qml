@@ -39,9 +39,6 @@ Item {
         }
     }
 
-    function updateCapsLock() {
-    }
-
     function resetFocus() {
         if (!loginScreen.foundUsers) {
             userInput.input.forceActiveFocus();
@@ -54,22 +51,24 @@ Item {
     }
 
     state: "normal"
+
     onStateChanged: {
         if (state === "normal")
             resetFocus();
-
     }
+
     Component.onDestruction: {
         if (typeof connections !== 'undefined')
             connections.target = null;
-
     }
+
     Keys.onPressed: function(event) {
         if (event.key === Qt.Key_Escape) {
             if (loginScreen.state === "authenticating") {
                 event.accepted = false;
                 return ;
             }
+
             if (Config.lockScreenDisplay)
                 loginScreen.close();
 
@@ -77,6 +76,7 @@ Item {
         } else if (event.key === Qt.Key_CapsLock) {
             root.capsLockOn = !root.capsLockOn;
         }
+
         event.accepted = true;
     }
 

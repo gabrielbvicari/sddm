@@ -68,8 +68,8 @@ Item {
         Component.onDestruction: {
             if (clockTimer)
                 clockTimer.stop();
-
         }
+
         Component.onCompleted: {
             lockScreen.alignItem(timePositioner, Config.clockPosition);
             time.updateTime();
@@ -124,7 +124,6 @@ Item {
             bottomMargin: Config.lockScreenPaddingBottom || (lockScreen.height > 0 ? lockScreen.height / 10 : 50)
             leftMargin: Config.lockScreenPaddingLeft || (lockScreen.height > 0 ? lockScreen.height / 10 : 50)
         }
-
     }
 
     ColumnLayout {
@@ -158,7 +157,6 @@ Item {
                 visible: Config.lockMessageDisplayIcon
                 antialiasing: true
             }
-
         }
 
         Text {
@@ -178,7 +176,6 @@ Item {
             bottomMargin: Config.lockScreenPaddingBottom || (lockScreen.height > 0 ? lockScreen.height / 10 : 50)
             leftMargin: Config.lockScreenPaddingLeft || (lockScreen.height > 0 ? lockScreen.height / 10 : 50)
         }
-
     }
 
     MouseArea {
@@ -189,5 +186,4 @@ Item {
         anchors.fill: lockScreen
         onClicked: lockScreen.loginRequested()
     }
-
 }

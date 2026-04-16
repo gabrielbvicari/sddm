@@ -49,7 +49,6 @@ Item {
 
             Rectangle {
                 id: iconContainer
-
                 color: "transparent"
                 visible: Config.passwordInputDisplayIcon
                 height: parent.height
@@ -57,7 +56,6 @@ Item {
 
                 Image {
                     id: icon
-
                     source: Config.getIcon(Config.passwordInputIcon)
                     anchors.centerIn: parent
                     width: Math.max(1, Config.passwordInputIconSize * Config.generalScale)
@@ -79,16 +77,12 @@ Item {
                         NumberAnimation {
                             duration: 250
                         }
-
                     }
-
                 }
-
             }
 
             Text {
                 id: placeholderLabel
-
                 padding: 0
                 visible: textField.text.length === 0 && (!textField.preeditText || textField.preeditText.length === 0)
                 text: (textConstants && textConstants.password) ? textConstants.password : "Password"
@@ -102,9 +96,7 @@ Item {
                 anchors {
                     verticalCenter: parent.verticalCenter
                 }
-
             }
-
         }
 
         background: Rectangle {
@@ -116,7 +108,5 @@ Item {
             topRightRadius: Config.passwordInputBorderRadiusRight
             bottomRightRadius: Config.passwordInputBorderRadiusRight
         }
-
     }
-
 }

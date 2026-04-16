@@ -16,9 +16,6 @@ Item {
             capsLockOn = keyboard.capsLock;
 
     }
-    onCapsLockOnChanged: {
-        loginScreen.updateCapsLock();
-    }
     states: [
         State {
             name: "lockState"
@@ -135,9 +132,9 @@ Item {
             }
             onStatusChanged: {
                 if (status === Image.Error) {
-                    if (source !== "backgrounds/default.jpg" && source !== "")
-                        source = "backgrounds/default.jpg";
-                    else if (source === "backgrounds/default.jpg")
+                    if (source !== "backgrounds/background.png" && source !== "")
+                        source = "backgrounds/background.png";
+                    else if (source === "backgrounds/background.png")
                         // If even default fails, show color background
                         displayColor = true;
                 }

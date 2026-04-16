@@ -184,5 +184,4 @@ QtObject {
     function getLabelFor(country) {
         return country && layouts[country] ? layouts[country]["label"] : "";
     }
-
 }

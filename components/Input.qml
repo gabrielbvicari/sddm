@@ -83,11 +83,8 @@ Item {
                         NumberAnimation {
                             duration: 250
                         }
-
                     }
-
                 }
-
             }
 
             Text {
@@ -106,9 +103,7 @@ Item {
                 anchors {
                     verticalCenter: parent.verticalCenter
                 }
-
             }
-
         }
 
         background: Rectangle {
@@ -120,7 +115,5 @@ Item {
             topRightRadius: input.splitBorderRadius ? Config.passwordInputBorderRadiusRight * Config.generalScale : Config.passwordInputBorderRadiusLeft * Config.generalScale
             bottomRightRadius: input.splitBorderRadius ? Config.passwordInputBorderRadiusRight * Config.generalScale : Config.passwordInputBorderRadiusLeft * Config.generalScale
         }
-
     }
-
 }

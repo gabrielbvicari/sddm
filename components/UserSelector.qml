@@ -57,7 +57,6 @@ Item {
 
     ListView {
         id: userList
-
         anchors.fill: parent
         orientation: selector.orientation === "horizontal" ? ListView.Horizontal : ListView.Vertical
         spacing: 10
@@ -76,6 +75,7 @@ Item {
         highlightFollowsCurrentItem: true
         model: userModel
         currentIndex: userModel.lastIndex
+
         onCurrentIndexChanged: {
             var username = userModel.data(userModel.index(currentIndex, 0), 257);
             var userRealName = userModel.data(userModel.index(currentIndex, 0), 258);
@@ -106,6 +106,7 @@ Item {
                 enabled: userModel.rowCount() > 1
                 tooltipText: active && selector.listUsers ? "Close User Selection" : (active && !listUsers ? "Select User" : `Select User ${model.name}`)
                 showTooltip: selector.focus && !listUsers && active
+
                 onClicked: {
                     if (!selector.listUsers) {
                         selector.openUserList();
@@ -119,6 +120,7 @@ Item {
                         userList.currentIndex = index;
                     }
                 }
+
                 onClickedOutside: {
                     selector.closeUserList();
                     selector.focus = false;
@@ -130,9 +132,7 @@ Item {
                     NumberAnimation {
                         duration: 200
                     }
-
                 }
-
             }
 
             Behavior on width {
@@ -142,7 +142,6 @@ Item {
                     duration: 200
                     easing.type: Easing.OutQuad
                 }
-
             }
 
             Behavior on height {
@@ -152,7 +151,6 @@ Item {
                     duration: 200
                     easing.type: Easing.OutQuad
                 }
-
             }
 
             Behavior on opacity {
@@ -161,11 +159,7 @@ Item {
                 NumberAnimation {
                     duration: 200
                 }
-
             }
-
         }
-
     }
-
 }

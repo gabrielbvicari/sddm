@@ -85,7 +85,6 @@ ColumnLayout {
                 color: Config.menuAreaPopupsContentColor
                 opacity: Config.menuAreaPopupsActiveOptionBackgroundOpacity
             }
-
         }
 
         delegate: Rectangle {
@@ -119,7 +118,6 @@ ColumnLayout {
                         sourceSize: Qt.size(width, height)
                         fillMode: Image.PreserveAspectFit
                     }
-
                 }
 
                 Column {
@@ -147,9 +145,7 @@ ColumnLayout {
                         elide: Text.ElideRight
                         rightPadding: 10
                     }
-
                 }
-
             }
 
             MouseArea {
@@ -165,9 +161,6 @@ ColumnLayout {
                     selector.updateLayout();
                 }
             }
-
         }
-
     }
-
 }

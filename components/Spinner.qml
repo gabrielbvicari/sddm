@@ -4,9 +4,9 @@ import QtQuick.Effects
 
 Item {
     id: spinnerContainer
-
     width: (spinner.width + Config.spinnerSpacing + spinnerText.width) * Config.generalScale
     height: childrenRect.height * Config.generalScale
+
     Component.onDestruction: {
         if (spinnerTextInterval) {
             spinnerTextInterval.running = false;
@@ -20,13 +20,13 @@ Item {
 
     Image {
         id: spinner
-
         source: Config.getIcon(Config.spinnerIcon)
         width: Config.spinnerIconSize * Config.generalScale
         height: width
         sourceSize.width: width
         sourceSize.height: height
         visible: false
+
         Component.onCompleted: {
             if (Config.loginAreaPosition === "left") {
                 anchors.left = parent.left;
@@ -43,7 +43,6 @@ Item {
 
     MultiEffect {
         id: spinnerEffect
-
         source: spinner
         anchors.fill: spinner
         colorization: 1
@@ -63,13 +62,13 @@ Item {
 
     Text {
         id: spinnerText
-
         visible: Config.spinnerDisplayText
         text: Config.spinnerText
         color: Config.spinnerColor
         font.pixelSize: Config.spinnerFontSize * Config.generalScale
         font.weight: Config.spinnerFontWeight
         font.family: Config.spinnerFontFamily
+
         Component.onCompleted: {
             if (Config.loginAreaPosition === "left") {
                 anchors.left = spinner.right;
@@ -85,6 +84,7 @@ Item {
                 anchors.horizontalCenter = parent.horizontalCenter;
             }
         }
+
         onVisibleChanged: {
             if (visible && Config.enableAnimations && Config.spinnerDisplayText) {
                 spinnerTextInterval.running = true;
@@ -96,7 +96,6 @@ Item {
 
         SequentialAnimation on scale {
             id: spinnerTextAnimation
-
             running: false
             loops: Animation.Infinite
 
@@ -113,17 +112,15 @@ Item {
                 duration: 900
                 easing.type: Easing.InOutQuad
             }
-
         }
-
     }
 
     Timer {
         id: spinnerTextInterval
-
         interval: 3500
         repeat: false
         running: false
+
         onTriggered: {
             spinnerTextAnimation.running = true;
         }
@@ -135,7 +132,6 @@ Item {
         NumberAnimation {
             duration: 150
         }
-
     }
 
     Behavior on visible {
@@ -160,9 +156,6 @@ Item {
                 to: 1
                 duration: 200
             }
-
         }
-
     }
-
 }

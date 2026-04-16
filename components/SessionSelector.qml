@@ -15,24 +15,25 @@ ColumnLayout {
 
     function getSessionIcon(name) {
         var available_session_icons = ["hyprland", "plasma", "gnome", "ubuntu", "sway", "awesome", "qtile", "i3", "bspwm", "dwm", "xfce", "cinnamon", "niri"];
+
         for (var i = 0; i < available_session_icons.length; i++) {
             if (name && name.toLowerCase().includes(available_session_icons[i]))
                 return "../icons/sessions/" + available_session_icons[i] + ".svg";
 
         }
+
         return "../icons/sessions/default.svg";
     }
 
     width: (Config.sessionPopupWidth - Config.menuAreaPopupsPadding * 2) * Config.generalScale
+
     Keys.onPressed: function(event) {
         if (event.key === Qt.Key_Down) {
             if (sessionModel.rowCount() > 0)
                 sessionList.currentIndex = (sessionList.currentIndex + sessionModel.rowCount() + 1) % sessionModel.rowCount();
-
         } else if (event.key === Qt.Key_Up) {
             if (sessionModel.rowCount() > 0)
                 sessionList.currentIndex = (sessionList.currentIndex + sessionModel.rowCount() - 1) % sessionModel.rowCount();
-
         } else if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter || event.key === Qt.Key_Space)
             selector.close();
         else if (event.key === Qt.Key_CapsLock)
@@ -41,7 +42,6 @@ ColumnLayout {
 
     ListView {
         id: sessionList
-
         Layout.preferredWidth: parent.width
         Layout.preferredHeight: Math.min((sessionModel ? sessionModel.rowCount() : 0) * (Config.menuAreaPopupsItemHeight * Config.generalScale + spacing), Config.menuAreaPopupsMaxHeight * Config.generalScale)
         orientation: ListView.Vertical
@@ -54,6 +54,7 @@ ColumnLayout {
         contentHeight: sessionModel.rowCount() * (Config.menuAreaPopupsItemHeight * Config.generalScale + spacing)
         model: sessionModel
         currentIndex: selector.currentSessionIndex
+
         onCurrentIndexChanged: {
             var session_name = sessionModel.data(sessionModel.index(currentIndex, 0), 260);
             selector.currentSessionIndex = currentIndex;
@@ -63,18 +64,15 @@ ColumnLayout {
 
         ScrollBar.vertical: ScrollBar {
             id: scrollbar
-
             policy: Config.menuAreaPopupsDisplayScrollbar && sessionList.contentHeight > sessionList.height ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
 
             contentItem: Rectangle {
                 id: scrollbarBackground
-
                 implicitWidth: 5 * Config.generalScale
                 radius: 5 * Config.generalScale
                 color: Config.menuAreaPopupsContentColor
                 opacity: Config.menuAreaPopupsActiveOptionBackgroundOpacity
             }
-
         }
 
         delegate: Rectangle {
@@ -101,7 +99,6 @@ ColumnLayout {
 
                     Image {
                         id: sessionIcon
-
                         anchors.centerIn: parent
                         source: selector.getSessionIcon(name)
                         width: Config.menuAreaPopupsIconSize * Config.generalScale
@@ -113,7 +110,6 @@ ColumnLayout {
 
                     MultiEffect {
                         id: sessionIconEffect
-
                         source: sessionIcon
                         anchors.fill: sessionIcon
                         colorization: 1
@@ -138,24 +134,19 @@ ColumnLayout {
                         font.pixelSize: Config.menuAreaPopupsFontSize * Config.generalScale
                         font.family: Config.menuAreaPopupsFontFamily
                     }
-
                 }
-
             }
 
             MouseArea {
                 id: itemMouseArea
-
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
                 hoverEnabled: true
+
                 onClicked: {
                     sessionList.currentIndex = index;
                 }
             }
-
         }
-
     }
-
 }

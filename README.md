@@ -1,6 +1,6 @@
 <div align="center">
 
-  <h1>SDDM Theme</h1>
+  <h1>SDDM</h1>
   <h5>A minimal, clean SDDM login theme for Wayland compositors, built with Qt 6 and QML.</h5>
 
 [![SDDM 0.21+](https://img.shields.io/badge/SDDM%200.21+-green.svg?style=for-the-badge&logo=kde)](https://github.com/sddm/sddm)

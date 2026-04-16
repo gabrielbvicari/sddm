@@ -36,7 +36,6 @@ Item {
     Keys.onPressed: function(event) {
         if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter || event.key === Qt.Key_Space)
             iconButton.clicked();
-
     }
 
     Rectangle {
@@ -56,9 +55,7 @@ Item {
             NumberAnimation {
                 duration: 250
             }
-
         }
-
     }
 
     Rectangle {
@@ -76,7 +73,6 @@ Item {
             color: iconButton.borderColor
             width: iconButton.focus ? (iconButton.borderSize * Config.generalScale) || 2 : (iconButton.borderSize > 0 ? (iconButton.borderSize * Config.generalScale) : 0)
         }
-
     }
 
     RowLayout {
@@ -120,7 +116,6 @@ Item {
                     NumberAnimation {
                         duration: 250
                     }
-
                 }
 
                 Behavior on colorizationColor {
@@ -129,11 +124,8 @@ Item {
                     ColorAnimation {
                         duration: 250
                     }
-
                 }
-
             }
-
         }
 
         Text {
@@ -153,7 +145,6 @@ Item {
             Component.onCompleted: {
                 if (iconButton.preferredWidth !== -1)
                     Layout.preferredWidth = iconButton.width - iconContainer.width;
-
             }
 
             Behavior on opacity {
@@ -162,11 +153,8 @@ Item {
                 NumberAnimation {
                     duration: 250
                 }
-
             }
-
         }
-
     }
 
     MouseArea {
@@ -198,9 +186,6 @@ Item {
                 border.width: 0
                 radius: Config.tooltipsBorderRadius * Config.generalScale
             }
-
         }
-
     }
-
 }

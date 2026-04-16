@@ -11,6 +11,7 @@ ColumnLayout {
     spacing: 2
     KeyNavigation.up: shutdownButton
     KeyNavigation.down: suspendButton
+
     Keys.onPressed: function(event) {
         if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter || event.key === Qt.Key_Space)
             selector.close();
@@ -20,7 +21,6 @@ ColumnLayout {
 
     IconButton {
         id: suspendButton
-
         preferredWidth: Layout.preferredWidth
         Layout.preferredHeight: Config.menuAreaPopupsItemHeight * Config.generalScale
         Layout.preferredWidth: Config.powerPopupWidth * Config.generalScale
@@ -36,10 +36,12 @@ ColumnLayout {
         activeBackgroundOpacity: Config.menuAreaPopupsActiveOptionBackgroundOpacity
         iconSize: Config.menuAreaPopupsIconSize
         fontSize: Config.menuAreaPopupsFontSize
+
         onClicked: {
             selector.close();
             sddm.suspend();
         }
+
         label: textConstants.suspend
         KeyNavigation.up: shutdownButton
         KeyNavigation.down: rebootButton
@@ -47,7 +49,6 @@ ColumnLayout {
 
     IconButton {
         id: rebootButton
-
         preferredWidth: Layout.preferredWidth
         Layout.preferredHeight: Config.menuAreaPopupsItemHeight * Config.generalScale
         Layout.preferredWidth: Config.powerPopupWidth * Config.generalScale
@@ -63,10 +64,12 @@ ColumnLayout {
         activeBackgroundOpacity: Config.menuAreaPopupsActiveOptionBackgroundOpacity
         iconSize: Config.menuAreaPopupsIconSize
         fontSize: Config.menuAreaPopupsFontSize
+
         onClicked: {
             selector.close();
             sddm.reboot();
         }
+
         label: textConstants.reboot
         KeyNavigation.up: suspendButton
         KeyNavigation.down: shutdownButton
@@ -74,7 +77,6 @@ ColumnLayout {
 
     IconButton {
         id: shutdownButton
-
         preferredWidth: Layout.preferredWidth
         Layout.preferredHeight: Config.menuAreaPopupsItemHeight * Config.generalScale
         Layout.preferredWidth: Config.powerPopupWidth * Config.generalScale
@@ -90,13 +92,14 @@ ColumnLayout {
         activeBackgroundOpacity: Config.menuAreaPopupsActiveOptionBackgroundOpacity
         iconSize: Config.menuAreaPopupsIconSize
         fontSize: Config.menuAreaPopupsFontSize
+
         onClicked: {
             selector.close();
             sddm.powerOff();
         }
+
         label: textConstants.shutdown
         KeyNavigation.up: rebootButton
         KeyNavigation.down: suspendButton
     }
-
 }

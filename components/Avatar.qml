@@ -137,6 +137,7 @@ Rectangle {
                 avatar.clickedOutside();
             mouse.accepted = isInside;
         }
+
         onMouseXChanged: updateHover()
         onMouseYChanged: updateHover()
 
@@ -161,9 +162,6 @@ Rectangle {
                 border.width: 0
                 radius: Config.tooltipsBorderRadius * Config.generalScale
             }
-
         }
-
     }
-
 }

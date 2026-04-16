@@ -41,7 +41,7 @@ QtObject {
     // @desc:Bottom padding of the lock screen. <br/>See also: <a href="#clockposition">Clock/position</a>, <a href="#lockmessageposition">Message/position</a>.
     property int lockScreenPaddingLeft: config.intValue("LockScreen/padding-left")
     // @desc:Left padding of the lock screen. <br/>See also: <a href="#clockposition">Clock/position</a>, <a href="#lockmessageposition">Message/position</a>.
-    property string lockScreenBackground: config.stringValue("LockScreen/background") || "default.jpg"
+    property string lockScreenBackground: config.stringValue("LockScreen/background") || "background.png"
     // @possible:File in `backgrounds/` @desc:Background of the lock screen.<br/>Supported formats: jpg, png, avi, mp4, mov, mkv, m4v, webm. <strong>.gifs are not supported as they may cause SDDM to crash.</strong> <br/>See also: <a href="#animatedbackgroundplaceholder">animated-background-placeholder</a>
     property bool lockScreenUseBackgroundColor: config.boolValue('LockScreen/use-background-color')
     // @desc:Whether or not to use a plain color as background of the lock screen instead of an image/video file.
@@ -111,7 +111,7 @@ QtObject {
     // @desc:Whether or not to paint the icon with the same color as the text.
     property int lockMessageSpacing: config.intValue("LockScreen.Message/spacing")
     // [LoginScreen]
-    property string loginScreenBackground: config.stringValue("LoginScreen/background") || "default.jpg"
+    property string loginScreenBackground: config.stringValue("LoginScreen/background") || "background.png"
     // @possible:File in `backgrounds/` @desc:Background of the login screen.<br/>Supported formats: jpg, png, avi, mp4, mov, mkv, m4v, webm. <strong>.gifs are not supported as they may cause SDDM to crash.</strong> <br/>See also: <a href="#animatedbackgroundplaceholder">animated-background-placeholder</a>
     property bool loginScreenUseBackgroundColor: config.boolValue('LoginScreen/use-background-color')
     // @desc:Whether or not to use a plain color as background of the login screen instead of an image/video file.
@@ -448,5 +448,4 @@ QtObject {
     function getIcon(iconName) {
         return `../icons/${iconName}`;
     }
-
 }

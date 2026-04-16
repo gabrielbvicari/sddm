@@ -9,8 +9,10 @@ Item {
     function calculatePopupPos(direction, align, popup, button) {
         var popupMargin = Config.menuAreaPopupsMargin;
         var x = 0, y = 0;
+
         if (direction === "up") {
             y = -popup.height - popupMargin;
+
             if (align === "start")
                 x = 0;
             else if (align === "end")
@@ -19,6 +21,7 @@ Item {
                 x = (button.width - popup.width) / 2;
         } else if (direction === "down") {
             y = button.height + popupMargin;
+
             if (align === "start")
                 x = 0;
             else if (align === "end")
@@ -27,6 +30,7 @@ Item {
                 x = (button.width - popup.width) / 2;
         } else if (direction === "left") {
             x = -popup.width - popupMargin;
+
             if (align === "start")
                 y = 0;
             else if (align === "end")
@@ -35,6 +39,7 @@ Item {
                 y = (button.height - popup.height) / 2;
         } else {
             x = button.width + popupMargin;
+
             if (align === "start")
                 y = 0;
             else if (align === "end")
@@ -42,14 +47,18 @@ Item {
             else
                 y = (button.height - popup.height) / 2;
         }
+
         return [x, y];
     }
 
     anchors.fill: parent
+
     Component.onCompleted: {
         var menus = Config.sortMenuButtons();
+
         for (var i = 0; i < menus.length; i++) {
             var pos;
+
             switch (menus[i].position) {
             case "top-left":
                 pos = topLeftButtons;
@@ -76,7 +85,9 @@ Item {
                 pos = bottomRightButtons;
                 break;
             }
+
             var createdObject;
+
             if (menus[i].name === "session")
                 createdObject = sessionMenuComponent.createObject(pos, {
             });
@@ -88,15 +99,16 @@ Item {
             });
             if (createdObject)
                 createdObjects.push(createdObject);
-
         }
     }
+
     Component.onDestruction: {
         for (var i = 0; i < createdObjects.length; i++) {
             if (createdObjects[i])
                 createdObjects[i].destroy();
 
         }
+
         createdObjects = [];
     }
 
@@ -125,17 +137,18 @@ Item {
             fontFamily: Config.menuAreaButtonsFontFamily
             activeFocusOnTab: true
             focus: false
+
             onClicked: {
                 if (loginScreen.isSelectingUser)
                     loginScreen.isSelectingUser = false;
                 else
                     popup.open();
             }
+
             tooltipText: "Change Session"
 
             Popup {
                 id: popup
-
                 parent: sessionButton
                 padding: Config.menuAreaPopupsPadding
                 dim: true
@@ -145,6 +158,7 @@ Item {
                 popupType: Popup.Item
                 closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
                 focus: visible
+
                 Component.onCompleted: {
                     [x, y] = menuArea.calculatePopupPos(Config.sessionPopupDirection, Config.sessionPopupAlign, popup, sessionButton);
                 }
@@ -176,9 +190,7 @@ Item {
                             color: Config.menuAreaPopupsBorderColor
                             width: Config.menuAreaPopupsBorderSize * Config.generalScale
                         }
-
                     }
-
                 }
 
                 Overlay.modal: Rectangle {
@@ -192,13 +204,9 @@ Item {
                             event.accepted = true;
                         }
                     }
-
                 }
-
             }
-
         }
-
     }
 
     Component {
@@ -206,9 +214,7 @@ Item {
 
         IconButton {
             id: layoutButton
-
             property bool showLabel: Config.layoutDisplayLayoutName
-
             height: Config.menuAreaButtonsSize * Config.generalScale
             icon: Config.getIcon(Config.layoutIcon)
             active: popup.visible
@@ -226,18 +232,20 @@ Item {
             activeFocusOnTab: true
             enabled: loginScreen.state === "normal" || popup.visible
             focus: false
+
             onClicked: {
                 if (loginScreen.isSelectingUser)
                     loginScreen.isSelectingUser = false;
                 else
                     popup.open();
             }
+
             tooltipText: "Change Keyboard Layout"
             label: showLabel ? (keyboard && keyboard.layouts && keyboard.currentLayout >= 0 && keyboard.currentLayout < keyboard.layouts.length ? keyboard.layouts[keyboard.currentLayout].shortName.toUpperCase() : "") : ""
+
             Component.onDestruction: {
                 if (typeof connections !== 'undefined')
                     connections.target = null;
-
             }
 
             Connections {
@@ -253,7 +261,6 @@ Item {
 
             Popup {
                 id: popup
-
                 parent: layoutButton
                 padding: Config.menuAreaPopupsPadding
                 focus: visible
@@ -263,12 +270,14 @@ Item {
                 modal: true
                 popupType: Popup.Item
                 closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+
                 Component.onCompleted: {
                     [x, y] = menuArea.calculatePopupPos(Config.layoutPopupDirection, Config.layoutPopupAlign, popup, layoutButton);
                 }
 
                 LayoutSelector {
                     focus: popup.focus
+
                     onLayoutChanged: function(index) {
                         layoutButton.label = showLabel ? (keyboard && keyboard.layouts && keyboard.currentLayout >= 0 && keyboard.currentLayout < keyboard.layouts.length ? keyboard.layouts[keyboard.currentLayout].shortName.toUpperCase() : "") : "";
                     }
@@ -292,9 +301,7 @@ Item {
                             color: Config.menuAreaPopupsBorderColor
                             width: Config.menuAreaPopupsBorderSize * Config.generalScale
                         }
-
                     }
-
                 }
 
                 Overlay.modal: Rectangle {
@@ -308,13 +315,9 @@ Item {
                             event.accepted = true;
                         }
                     }
-
                 }
-
             }
-
         }
-
     }
 
     Component {
@@ -322,7 +325,6 @@ Item {
 
         IconButton {
             id: powerButton
-
             height: Config.menuAreaButtonsSize * Config.generalScale
             width: Config.menuAreaButtonsSize * Config.generalScale
             icon: Config.getIcon(Config.powerIcon)
@@ -340,9 +342,11 @@ Item {
             enabled: loginScreen.state === "normal" || popup.visible
             activeFocusOnTab: true
             focus: false
+
             onClicked: {
                 popup.open();
             }
+
             tooltipText: "Power Options"
 
             Popup {
@@ -357,12 +361,14 @@ Item {
                 popupType: Popup.Item
                 closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
                 focus: visible
+
                 Component.onCompleted: {
                     [x, y] = menuArea.calculatePopupPos(Config.powerPopupDirection, Config.powerPopupAlign, popup, powerButton);
                 }
 
                 PowerMenu {
                     focus: popup.focus
+
                     onClose: {
                         popup.close();
                     }
@@ -383,9 +389,7 @@ Item {
                             color: Config.menuAreaPopupsBorderColor
                             width: Config.menuAreaPopupsBorderSize * Config.generalScale
                         }
-
                     }
-
                 }
 
                 Overlay.modal: Rectangle {
@@ -399,13 +403,9 @@ Item {
                             event.accepted = true;
                         }
                     }
-
                 }
-
             }
-
         }
-
     }
 
     Row {
@@ -421,12 +421,10 @@ Item {
             topMargin: Config.menuAreaButtonsMarginTop
             leftMargin: Config.menuAreaButtonsMarginLeft
         }
-
     }
 
     Row {
         id: topCenterButtons
-
         height: childrenRect.height
         width: childrenRect.width
         spacing: Config.menuAreaButtonsSpacing
@@ -436,12 +434,10 @@ Item {
             horizontalCenter: parent.horizontalCenter
             topMargin: Config.menuAreaButtonsMarginTop
         }
-
     }
 
     Row {
         id: topRightButtons
-
         height: childrenRect.height
         width: childrenRect.width
         spacing: Config.menuAreaButtonsSpacing
@@ -452,12 +448,10 @@ Item {
             topMargin: Config.menuAreaButtonsMarginTop
             rightMargin: Config.menuAreaButtonsMarginRight
         }
-
     }
 
     Column {
         id: centerLeftButtons
-
         height: childrenRect.height
         width: childrenRect.width
         spacing: Config.menuAreaButtonsSpacing
@@ -467,7 +461,6 @@ Item {
             verticalCenter: parent.verticalCenter
             leftMargin: Config.menuAreaButtonsMarginLeft
         }
-
     }
 
     Column {
@@ -482,7 +475,6 @@ Item {
             verticalCenter: parent.verticalCenter
             rightMargin: Config.menuAreaButtonsMarginRight
         }
-
     }
 
     Row {
@@ -498,12 +490,10 @@ Item {
             bottomMargin: Config.menuAreaButtonsMarginBottom
             leftMargin: Config.menuAreaButtonsMarginLeft
         }
-
     }
 
     Row {
         id: bottomCenterButtons
-
         height: childrenRect.height
         width: childrenRect.width
         spacing: Config.menuAreaButtonsSpacing
@@ -513,12 +503,10 @@ Item {
             horizontalCenter: parent.horizontalCenter
             bottomMargin: Config.menuAreaButtonsMarginBottom
         }
-
     }
 
     Row {
         id: bottomRightButtons
-
         height: childrenRect.height
         width: childrenRect.width
         spacing: Config.menuAreaButtonsSpacing
@@ -529,7 +517,5 @@ Item {
             bottomMargin: Config.menuAreaButtonsMarginBottom
             rightMargin: Config.menuAreaButtonsMarginRight
         }
-
     }
-
 }
